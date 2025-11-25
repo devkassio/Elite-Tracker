@@ -10,10 +10,11 @@
 
 import { Router } from 'express';
 import packageJson from '../package.json' with { type: 'json' };
+import { HabitsController } from './controllers/habits.controller.js';
 
 export const router = Router();
 
-const habits = [];
+const habitsController = new HabitsController();
 
 router.get('/', (_req, res) => {
   const { name, version, description } = packageJson;
@@ -26,11 +27,5 @@ router.get('/', (_req, res) => {
 });
 
 router.post('/habits', (req, res) => {
-  const { name } = req.body;
-
-  const newHabit = { name };
-
-  habits.push(newHabit);
-
-  res.status(201).json(newHabit);
+  return habitsController.store(req, res);
 });
