@@ -77,4 +77,18 @@ elitetracker-api/
 
 ## 📄 Licença
 
-ISC
+MIT License - Copyright (c) 2025 Kássio Barros
+
+**Proteções Aplicadas:**
+- ✅ Copyright protegido por lei
+- ✅ Atribuição obrigatória ao autor original
+- ✅ Notificação recomendada para uso comercial
+- ✅ Proibido uso de marcas registradas sem autorização
+
+Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
+
+## ⚠️ Aviso Legal
+
+Este software é fornecido "como está", sem garantias. O uso comercial é permitido,
+mas requer atribuição clara ao autor original. Cópias não autorizadas que removam
+os créditos do autor violam os termos da licença.

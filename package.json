@@ -25,7 +25,7 @@
     "name": "Kássio Barros",
     "url": "https://github.com/devkassio"
   },
-  "license": "ISC",
+  "license": "MIT",
   "description": "API para o Elite Tracker",
   "devDependencies": {
     "@biomejs/biome": "^2.3.7",
