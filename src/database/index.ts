@@ -17,11 +17,19 @@ export async function setupMongo() {
     if (mongoose.connection.readyState === 1) {
       return;
     }
+
+    const mongoUri = process.env.MONGODB_URI;
+
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI não está definida no arquivo .env');
+    }
+
     console.log('Connecting to MongoDB... 😬');
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 3000,
+    });
     console.log('MongoDB connected successfully 😎✨');
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    throw error;
+    throw new Error(`❌ Error connecting to MongoDB: ${error}`);
   }
 }
