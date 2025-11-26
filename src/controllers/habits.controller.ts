@@ -11,6 +11,7 @@
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { habitModel } from '../schemas/habit.model.js';
+import { buildValidationErrorMessage } from '../utils/build-validation-error-message.util.js';
 
 export class HabitsController {
   store = async (req: Request, res: Response): Promise<Response> => {
@@ -18,11 +19,11 @@ export class HabitsController {
       name: z.string().min(2).max(70),
     });
 
-    const { name } = req.body;
-    const habit = Schema.safeParse({ name });
+    const habit = Schema.safeParse(req.body);
 
     if (!habit.success) {
-      return res.status(400).json({ message: 'Invalid habit name.' });
+      const errors = buildValidationErrorMessage(habit.error.issues);
+      return res.status(422).json({ message: errors });
     }
 
     const findHabit = await habitModel.findOne({ name: habit.data.name });
