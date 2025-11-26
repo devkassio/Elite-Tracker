@@ -14,6 +14,11 @@ import { habitModel } from '../schemas/habit.model.js';
 export class HabitsController {
   store = async (req: Request, res: Response): Promise<Response> => {
     const { name } = req.body;
+    const findHabit = await habitModel.findOne({ name });
+
+    if (findHabit) {
+      return res.status(400).json({ message: 'Habit already exists.' });
+    }
 
     const newHabit = await habitModel.create({ name, isCompleted: [] });
 
