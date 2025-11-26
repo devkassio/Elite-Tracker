@@ -57,6 +57,12 @@ export class HabitsController {
       return res.status(422).json({ message: errors });
     }
 
+    const findHabit = await habitModel.findById(validation.data.id);
+
+    if (!findHabit) {
+      return res.status(404).json({ message: 'Habit not found.' });
+    }
+
     await habitModel.deleteOne({
       _id: validation.data.id,
     });
