@@ -37,3 +37,7 @@ router.post('/habits', (req, res) => {
 router.delete('/habits/:id', (req, res) => {
   return habitsController.delete(req, res);
 });
+
+router.patch('/habits/:id/toggle', (req, res) => {
+  return habitsController.toggle(req, res);
+});

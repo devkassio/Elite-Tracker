@@ -8,6 +8,7 @@
  * @repository https://github.com/devkassio/Elite-Tracker
  */
 
+import dayjs from 'dayjs';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { habitModel } from '../schemas/habit.model.js';
@@ -68,5 +69,49 @@ export class HabitsController {
     });
 
     return res.status(204).json({ message: 'Habit deleted successfully.' });
+  };
+
+  toggle = async (req: Request, res: Response) => {
+    const Schema = z.object({
+      id: z.string(),
+    });
+
+    const validation = Schema.safeParse(req.params);
+
+    if (!validation.success) {
+      const errors = buildValidationErrorMessage(validation.error.issues);
+      return res.status(422).json({ message: errors });
+    }
+
+    const findHabit = await habitModel.findOne({ _id: validation.data.id });
+
+    if (!findHabit) {
+      return res.status(404).json({ message: 'Habit not found.' });
+    }
+
+    const today = dayjs().startOf('day').toISOString();
+
+    const isHabitCompletedOnDate = findHabit
+      .toObject()
+      ?.isCompleted.find((date) => dayjs(String(date)).toISOString() === today);
+
+    if (isHabitCompletedOnDate) {
+      // Remove today's date from isCompleted
+      const updatedDates = await habitModel.findOneAndUpdate(
+        { _id: validation.data.id },
+        { $pull: { isCompleted: today } },
+        { returnDocument: 'after' }
+      );
+      return res.status(200).json(updatedDates);
+    }
+
+    // Add today's date to isCompleted
+    const updatedHabit = await habitModel.findOneAndUpdate(
+      { _id: validation.data.id },
+      { $push: { isCompleted: today } },
+      { returnDocument: 'after' }
+    );
+
+    return res.status(200).json(updatedHabit);
   };
 }
