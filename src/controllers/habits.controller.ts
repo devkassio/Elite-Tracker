@@ -39,4 +39,28 @@ export class HabitsController {
 
     return res.status(201).json(newHabit);
   };
+
+  index = async (_req: Request, res: Response): Promise<Response> => {
+    const habits = await habitModel.find().sort({ name: 1 });
+    return res.status(200).json(habits);
+  };
+
+  delete = async (req: Request, res: Response) => {
+    const Schema = z.object({
+      id: z.string(),
+    });
+
+    const validation = Schema.safeParse(req.params);
+
+    if (!validation.success) {
+      const errors = buildValidationErrorMessage(validation.error.issues);
+      return res.status(422).json({ message: errors });
+    }
+
+    await habitModel.deleteOne({
+      _id: validation.data.id,
+    });
+
+    return res.status(204).json({ message: 'Habit deleted successfully.' });
+  };
 }

@@ -26,6 +26,14 @@ router.get('/', (_req, res) => {
   });
 });
 
+router.get('/habits', (req, res) => {
+  return habitsController.index(req, res);
+});
+
 router.post('/habits', (req, res) => {
   return habitsController.store(req, res);
+});
+
+router.delete('/habits/:id', (req, res) => {
+  return habitsController.delete(req, res);
 });
