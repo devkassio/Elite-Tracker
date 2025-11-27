@@ -8,6 +8,7 @@
  * @repository https://github.com/devkassio/Elite-Tracker
  */
 
+import axios from 'axios';
 import type { Request, Response } from 'express';
 
 const clientId = 'Ov23liNyNyxBCH6h8VB1';
@@ -20,13 +21,40 @@ export class AuthController {
     res.redirect(redirectUrl);
   };
 
-  authCallback = (req: Request, res: Response) => {
+  authCallback = async (req: Request, res: Response) => {
     // Implementation for handling OAuth callback will go here
-    console.log(req.query);
+    const { code } = req.query;
 
-    return res.send();
+    const accessTokenUrl = await axios.post(
+      'https://github.com/login/oauth/access_token',
+      {
+        // biome-ignore lint/style/useNamingConvention: GitHub API requires snake_case
+        client_id: clientId,
+        // biome-ignore lint/style/useNamingConvention: GitHub API requires snake_case
+        client_secret: clientSecret,
+        code,
+      },
+      {
+        headers: {
+          // biome-ignore lint/style/useNamingConvention: HTTP header requires PascalCase
+          Accept: 'application/json',
+        },
+      }
+    );
+
+    const userDataResult = await axios.get('https://api.github.com/user', {
+      headers: {
+        // biome-ignore lint/style/useNamingConvention: HTTP header requires PascalCase
+        Authorization: `Bearer ${accessTokenUrl.data.access_token}`,
+      },
+    });
+
+    const {
+      node_id: nodeId,
+      avatar_url: avatarUrl,
+      name,
+    } = userDataResult.data;
+
+    return res.status(200).json({ nodeId, avatarUrl, name });
   };
 }
-
-// clientSecret will be used in future OAuth callback implementation
-console.log('OAuth configured with client:', clientId, clientSecret);
