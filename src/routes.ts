@@ -11,10 +11,12 @@
 import { Router } from 'express';
 import packageJson from '../package.json' with { type: 'json' };
 import { HabitsController } from './controllers/habits.controller.js';
+import { FocusTimeController } from './controllers/focus.controller.js';
 
 export const router = Router();
 
 const habitsController = new HabitsController();
+const focusTimeController = new FocusTimeController();
 
 router.get('/', (_req, res) => {
   const { name, version, description } = packageJson;
@@ -40,4 +42,8 @@ router.delete('/habits/:id', (req, res) => {
 
 router.patch('/habits/:id/toggle', (req, res) => {
   return habitsController.toggle(req, res);
+});
+
+router.post('/focus-times', (req, res) => {
+  return focusTimeController.store(req, res);
 });
