@@ -51,3 +51,7 @@ router.patch('/habits/:id/toggle', (req, res) => {
 router.post('/focus-times', (req, res) => {
   return focusTimeController.store(req, res);
 });
+
+router.get('/focus-times/metrics/month', (req, res) => {
+  return focusTimeController.metricsByMonth(req, res);
+});
