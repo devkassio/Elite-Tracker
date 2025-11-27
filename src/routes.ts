@@ -52,6 +52,10 @@ router.post('/focus-times', (req, res) => {
   return focusTimeController.store(req, res);
 });
 
+router.get('/focus-times', (req, res) => {
+  return focusTimeController.index(req, res);
+});
+
 router.get('/focus-times/metrics', (req, res) => {
   return focusTimeController.metricsByMonth(req, res);
 });

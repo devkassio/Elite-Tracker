@@ -18,7 +18,7 @@ const focusTimeSchema = new Schema(
       required: true,
     },
     timeTo: {
-      type: [Date],
+      type: Date,
       required: true,
     },
   },

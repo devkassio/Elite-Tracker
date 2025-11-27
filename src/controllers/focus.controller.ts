@@ -40,10 +40,36 @@ export class FocusTimeController {
 
     const newFocusTime = await focusTimeModel.create({
       timeFrom: timeFrom.toDate(),
-      timeTo: [timeTo.toDate()],
+      timeTo: timeTo.toDate(),
     });
 
     return res.status(201).json(newFocusTime);
+  };
+
+  index = async (req: Request, res: Response) => {
+    const Schema = z.object({
+      date: z.coerce.date(),
+    });
+
+    const validation = Schema.safeParse(req.query);
+
+    if (!validation.success) {
+      const errors = buildValidationErrorMessage(validation.error.issues);
+      return res.status(422).json({ message: errors });
+    }
+    const startDate = dayjs(validation.data.date).startOf('day');
+    const endDate = dayjs(validation.data.date).endOf('day');
+
+    const focusTimes = await focusTimeModel
+      .find({
+        timeFrom: {
+          $gte: startDate.toDate(),
+          $lte: endDate.toDate(),
+        },
+      })
+      .sort({ timeFrom: 1 });
+
+    return res.status(200).json(focusTimes);
   };
 
   metricsByMonth = async (req: Request, res: Response) => {
