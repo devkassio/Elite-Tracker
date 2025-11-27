@@ -10,13 +10,15 @@
 
 import { Router } from 'express';
 import packageJson from '../package.json' with { type: 'json' };
-import { HabitsController } from './controllers/habits.controller.js';
 import { FocusTimeController } from './controllers/focus.controller.js';
+import { HabitsController } from './controllers/habits.controller.js';
+import { AuthController } from './controllers/auth.controller.js';
 
 export const router = Router();
 
 const habitsController = new HabitsController();
 const focusTimeController = new FocusTimeController();
+const authController = new AuthController();
 
 router.get('/', (_req, res) => {
   const { name, version, description } = packageJson;
@@ -26,6 +28,14 @@ router.get('/', (_req, res) => {
     version,
     description,
   });
+});
+
+router.get('/auth', (req, res) => {
+  return authController.auth(req, res);
+});
+
+router.get('/auth/callback', (req, res) => {
+  return authController.authCallback(req, res);
 });
 
 router.get('/habits', (req, res) => {
