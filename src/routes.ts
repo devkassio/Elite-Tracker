@@ -32,6 +32,10 @@ router.get('/habits', (req, res) => {
   return habitsController.index(req, res);
 });
 
+router.get('/habits/:id/metrics', (req, res) => {
+  return habitsController.metrics(req, res);
+});
+
 router.post('/habits', (req, res) => {
   return habitsController.store(req, res);
 });
