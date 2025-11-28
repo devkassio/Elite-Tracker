@@ -10,8 +10,9 @@
 
 import axios, { isAxiosError } from 'axios';
 import type { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-const { GITHUB_CLIENT_ID: clientId, GITHUB_CLIENT_SECRET: clientSecret } =
+const { GITHUB_CLIENT_ID: clientId, GITHUB_CLIENT_SECRET: clientSecret, JWT_SECRET: jwtSecret, JWT_EXPIRATION: jwtExpiration } =
   process.env;
 
 export class AuthController {
@@ -71,7 +72,25 @@ export class AuthController {
         name,
       } = userDataResult.data;
 
-      return res.status(200).json({ nodeId, avatarUrl, name });
+      if (!jwtSecret) {
+        return res.status(500).json({
+          error: 'Internal Server Error',
+          message: 'JWT configuration is missing',
+        });
+      }
+
+      // @ts-expect-error - TypeScript exactOptionalPropertyTypes conflicts with jwt.sign types
+      const token = jwt.sign(
+        {
+          nodeId,
+        },
+        jwtSecret,
+        {
+          expiresIn: jwtExpiration || '7d',
+        }
+      );
+
+      return res.status(200).json({ nodeId, avatarUrl, name, token });
     } catch (error) {
       console.log('OAuth callback error:', error);
 
