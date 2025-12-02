@@ -10,9 +10,10 @@
 
 import { Router } from 'express';
 import packageJson from '../package.json' with { type: 'json' };
+import { AuthController } from './controllers/auth.controller.js';
 import { FocusTimeController } from './controllers/focus.controller.js';
 import { HabitsController } from './controllers/habits.controller.js';
-import { AuthController } from './controllers/auth.controller.js';
+import { authMiddleware } from './middlewares/auth.middleware.js';
 
 export const router = Router();
 
@@ -38,7 +39,7 @@ router.get('/auth/callback', (req, res) => {
   return authController.authCallback(req, res);
 });
 
-router.get('/habits', (req, res) => {
+router.get('/habits', authMiddleware, (req, res) => {
   return habitsController.index(req, res);
 });
 

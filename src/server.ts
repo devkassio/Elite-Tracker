@@ -14,11 +14,14 @@
  */
 
 import dotenv from 'dotenv';
+
+// IMPORTANTE: dotenv.config() deve ser chamado ANTES de importar qualquer módulo
+// que use process.env, caso contrário as variáveis estarão undefined
+dotenv.config();
+
 import express from 'express';
 import { setupMongo } from './database/index.js';
 import { router } from './routes.js';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;

@@ -12,11 +12,9 @@ import axios, { isAxiosError } from 'axios';
 import type { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-const { GITHUB_CLIENT_ID: clientId, GITHUB_CLIENT_SECRET: clientSecret, JWT_SECRET: jwtSecret, JWT_EXPIRATION: jwtExpiration } =
-  process.env;
-
 export class AuthController {
   auth = (_req: Request, res: Response) => {
+    const clientId = process.env.GITHUB_CLIENT_ID;
     const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}`;
 
     res.redirect(redirectUrl);
@@ -25,6 +23,10 @@ export class AuthController {
   authCallback = async (req: Request, res: Response) => {
     try {
       const { code } = req.query;
+      const clientId = process.env.GITHUB_CLIENT_ID;
+      const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+      const jwtSecret = process.env.JWT_SECRET;
+      const jwtExpiration = process.env.JWT_EXPIRATION;
 
       if (!code || typeof code !== 'string') {
         return res.status(400).json({
