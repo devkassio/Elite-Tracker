@@ -135,7 +135,7 @@ http GET localhost:4000/habits "Authorization:Bearer <token>"
 
 ### Pré-requisitos
 
-- Node.js 20+ 
+- Node.js 20+
 - MongoDB 6+
 - Git
 
@@ -188,15 +188,15 @@ npm run start
 
 ## 📝 Scripts Disponíveis
 
-| Script | Descrição |
-|--------|-----------|
-| `npm run dev` | Inicia servidor em modo desenvolvimento com hot reload |
-| `npm run build` | Compila TypeScript para JavaScript (output: `dist/`) |
-| `npm run start` | Inicia servidor em produção |
-| `npm run check` | Lint + format + fix automático (recomendado) |
-| `npm run lint` | Executa apenas linting |
-| `npm run format` | Executa apenas formatação |
-| `npm run typecheck` | Verifica tipos sem compilar |
+| Script              | Descrição                                              |
+| ------------------- | ------------------------------------------------------ |
+| `npm run dev`       | Inicia servidor em modo desenvolvimento com hot reload |
+| `npm run build`     | Compila TypeScript para JavaScript (output: `dist/`)   |
+| `npm run start`     | Inicia servidor em produção                            |
+| `npm run check`     | Lint + format + fix automático (recomendado)           |
+| `npm run lint`      | Executa apenas linting                                 |
+| `npm run format`    | Executa apenas formatação                              |
+| `npm run typecheck` | Verifica tipos sem compilar                            |
 
 ## 🔌 API Endpoints
 
@@ -411,16 +411,16 @@ Retorna métricas mensais de tempo de foco.
 
 ### Códigos de Status HTTP
 
-| Código | Significado |
-|--------|-------------|
-| `200` | OK - Requisição bem-sucedida |
-| `201` | Created - Recurso criado com sucesso |
-| `204` | No Content - Recurso deletado com sucesso |
-| `400` | Bad Request - Dados inválidos |
-| `401` | Unauthorized - Token inválido ou ausente |
-| `404` | Not Found - Recurso não encontrado |
-| `422` | Unprocessable Entity - Erro de validação |
-| `500` | Internal Server Error - Erro no servidor |
+| Código | Significado                               |
+| ------ | ----------------------------------------- |
+| `200`  | OK - Requisição bem-sucedida              |
+| `201`  | Created - Recurso criado com sucesso      |
+| `204`  | No Content - Recurso deletado com sucesso |
+| `400`  | Bad Request - Dados inválidos             |
+| `401`  | Unauthorized - Token inválido ou ausente  |
+| `404`  | Not Found - Recurso não encontrado        |
+| `422`  | Unprocessable Entity - Erro de validação  |
+| `500`  | Internal Server Error - Erro no servidor  |
 
 ---
 
