@@ -20,6 +20,10 @@ const habitSchema = new Schema(
     isCompleted: {
       type: [Date],
     },
+    userId: {
+      type: String,
+      required: true,
+    },
   },
   {
     versionKey: false,

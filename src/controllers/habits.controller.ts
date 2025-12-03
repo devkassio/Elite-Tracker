@@ -28,7 +28,13 @@ export class HabitsController {
       return res.status(422).json({ message: errors });
     }
 
-    const findHabit = await habitModel.findOne({ name: habit.data.name });
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
+    const findHabit = await habitModel.findOne({
+      name: habit.data.name,
+      userId,
+    });
 
     if (findHabit) {
       return res.status(400).json({ message: 'Habit already exists.' });
@@ -37,13 +43,16 @@ export class HabitsController {
     const newHabit = await habitModel.create({
       name: habit.data.name,
       isCompleted: [],
+      userId,
     });
 
     return res.status(201).json(newHabit);
   };
 
-  index = async (_req: Request, res: Response): Promise<Response> => {
-    const habits = await habitModel.find().sort({ name: 1 });
+  index = async (req: Request, res: Response): Promise<Response> => {
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+    const habits = await habitModel.find({ userId }).sort({ name: 1 });
     return res.status(200).json(habits);
   };
 
@@ -59,7 +68,13 @@ export class HabitsController {
       return res.status(422).json({ message: errors });
     }
 
-    const findHabit = await habitModel.findById(validation.data.id);
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
+    const findHabit = await habitModel.findOne({
+      _id: validation.data.id,
+      userId,
+    });
 
     if (!findHabit) {
       return res.status(404).json({ message: 'Habit not found.' });
@@ -67,6 +82,7 @@ export class HabitsController {
 
     await habitModel.deleteOne({
       _id: validation.data.id,
+      userId,
     });
 
     return res.status(204).json({ message: 'Habit deleted successfully.' });
@@ -84,7 +100,13 @@ export class HabitsController {
       return res.status(422).json({ message: errors });
     }
 
-    const findHabit = await habitModel.findOne({ _id: validation.data.id });
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
+    const findHabit = await habitModel.findOne({
+      _id: validation.data.id,
+      userId,
+    });
 
     if (!findHabit) {
       return res.status(404).json({ message: 'Habit not found.' });
@@ -99,7 +121,7 @@ export class HabitsController {
     if (isHabitCompletedOnDate) {
       // Remove today's date from isCompleted
       const updatedDates = await habitModel.findOneAndUpdate(
-        { _id: validation.data.id },
+        { _id: validation.data.id, userId },
         { $pull: { isCompleted: today } },
         { returnDocument: 'after' }
       );
@@ -108,7 +130,7 @@ export class HabitsController {
 
     // Add today's date to isCompleted
     const updatedHabit = await habitModel.findOneAndUpdate(
-      { _id: validation.data.id },
+      { _id: validation.data.id, userId },
       { $push: { isCompleted: today } },
       { returnDocument: 'after' }
     );
@@ -129,6 +151,9 @@ export class HabitsController {
       return res.status(422).json({ message: errors });
     }
 
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
     const dateFrom = dayjs(validation.data.date).startOf('month');
     const dateTo = dayjs(validation.data.date).endOf('month');
 
@@ -136,6 +161,7 @@ export class HabitsController {
       .aggregate()
       .match({
         _id: new mongoose.Types.ObjectId(validation.data.id),
+        userId,
       })
       .project({
         _id: 1,
@@ -147,10 +173,10 @@ export class HabitsController {
             cond: {
               $and: [
                 {
-                  $gte: ['$$iscomplete', dateFrom.toDate()],
+                  $gte: [{ $toDate: '$$iscomplete' }, dateFrom.toDate()],
                 },
                 {
-                  $lte: ['$$iscomplete', dateTo.toDate()],
+                  $lte: [{ $toDate: '$$iscomplete' }, dateTo.toDate()],
                 },
               ],
             },

@@ -39,7 +39,9 @@ router.get('/auth/callback', (req, res) => {
   return authController.authCallback(req, res);
 });
 
-router.get('/habits', authMiddleware, (req, res) => {
+router.use(authMiddleware);
+
+router.get('/habits', (req, res) => {
   return habitsController.index(req, res);
 });
 
