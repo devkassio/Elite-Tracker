@@ -38,9 +38,13 @@ export class FocusTimeController {
         .json({ message: '"timeTo" cannot be before "timeFrom".' });
     }
 
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
     const newFocusTime = await focusTimeModel.create({
       timeFrom: timeFrom.toDate(),
       timeTo: timeTo.toDate(),
+      userId,
     });
 
     return res.status(201).json(newFocusTime);
@@ -57,11 +61,15 @@ export class FocusTimeController {
       const errors = buildValidationErrorMessage(validation.error.issues);
       return res.status(422).json({ message: errors });
     }
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
     const startDate = dayjs(validation.data.date).startOf('day');
     const endDate = dayjs(validation.data.date).endOf('day');
 
     const focusTimes = await focusTimeModel
       .find({
+        userId,
         timeFrom: {
           $gte: startDate.toDate(),
           $lte: endDate.toDate(),
@@ -84,12 +92,16 @@ export class FocusTimeController {
       return res.status(422).json({ message: errors });
     }
 
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
     const startDate = dayjs(validation.data.date).startOf('month');
     const endDate = dayjs(validation.data.date).endOf('month');
 
     const metricsFocusTime = await focusTimeModel
       .aggregate()
       .match({
+        userId,
         timeFrom: {
           $gte: startDate.toDate(),
           $lte: endDate.toDate(),
