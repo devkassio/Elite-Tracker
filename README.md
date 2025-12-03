@@ -632,6 +632,6 @@ MIT © [Kássio Barros](https://github.com/devkassio)
 
 <div align="center">
 
-**Backend completo e pronto para integração com frontend!** ✨
+**Backend completo!** ✨
 
 </div>
