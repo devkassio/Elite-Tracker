@@ -19,6 +19,8 @@ import dotenv from 'dotenv';
 // que use process.env, caso contrário as variáveis estarão undefined
 dotenv.config();
 
+import cors from 'cors';
+
 import express from 'express';
 import { setupMongo } from './database/index.js';
 import { router } from './routes.js';
@@ -28,6 +30,11 @@ const PORT = process.env.PORT || 4000;
 
 setupMongo()
   .then(() => {
+    app.use(
+      cors({
+        origin: true,
+      })
+    );
     app.use(express.json());
     app.use(router);
     app.listen(PORT, () => {
