@@ -17,7 +17,7 @@ export class AuthController {
     const clientId = process.env.GITHUB_CLIENT_ID;
     const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}`;
 
-    res.redirect(redirectUrl);
+    res.status(200).json({ redirectUrl });
   };
 
   authCallback = async (req: Request, res: Response) => {
