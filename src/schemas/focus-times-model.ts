@@ -21,6 +21,11 @@ const focusTimeSchema = new Schema(
       type: Date,
       required: true,
     },
+    type: {
+      type: String,
+      enum: ['focus', 'rest'],
+      default: 'focus',
+    },
     userId: {
       type: String,
       required: true,

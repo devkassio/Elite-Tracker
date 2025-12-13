@@ -19,6 +19,7 @@ export class FocusTimeController {
     const Schema = z.object({
       timeFrom: z.coerce.date(),
       timeTo: z.coerce.date(),
+      type: z.enum(['focus', 'rest']).default('focus'),
     });
 
     const validation = Schema.safeParse(req.body);
@@ -29,6 +30,7 @@ export class FocusTimeController {
     }
     const timeFrom = dayjs(validation.data.timeFrom);
     const timeTo = dayjs(validation.data.timeTo);
+    const type = validation.data.type;
 
     const isTimeToBeforeTimeFrom = timeTo.isBefore(timeFrom);
 
@@ -44,6 +46,7 @@ export class FocusTimeController {
     const newFocusTime = await focusTimeModel.create({
       timeFrom: timeFrom.toDate(),
       timeTo: timeTo.toDate(),
+      type,
       userId,
     });
 
@@ -125,5 +128,14 @@ export class FocusTimeController {
       .sort({ _id: 1 });
 
     return res.status(200).json(metricsFocusTime);
+  };
+
+  deleteAll = async (req: Request, res: Response) => {
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
+    await focusTimeModel.deleteMany({ userId });
+
+    return res.status(200).json({ message: 'All focus times deleted successfully' });
   };
 }

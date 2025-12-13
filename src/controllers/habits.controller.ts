@@ -190,4 +190,13 @@ export class HabitsController {
 
     return res.status(200).json(habitMetrics);
   };
+
+  deleteAll = async (req: Request, res: Response) => {
+    // @ts-expect-error - req.user is added by authMiddleware
+    const userId = req.user?.nodeId;
+
+    await habitModel.deleteMany({ userId });
+
+    return res.status(200).json({ message: 'All habits deleted successfully' });
+  };
 }
