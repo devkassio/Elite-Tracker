@@ -28,11 +28,29 @@ import { router } from './routes.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Lista de origens permitidas
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://devkassio.github.io',
+  'https://devkassio.github.io/Elite-Tracker-Front',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 setupMongo()
   .then(() => {
     app.use(
       cors({
-        origin: 'http://localhost:5173',
+        origin: (origin, callback) => {
+          // Permitir requisições sem origin (mobile apps, Postman, etc)
+          if (!origin) return callback(null, true);
+
+          if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error('Not allowed by CORS'));
+          }
+        },
         credentials: true,
       })
     );
