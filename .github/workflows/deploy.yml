@@ -20,31 +20,31 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: elitetracker-front/package-lock.json
-      
+
       - name: Install dependencies
         working-directory: ./elitetracker-front
         run: npm ci
-      
+
       - name: Build
         working-directory: ./elitetracker-front
         run: npm run build
         env:
           VITE_API_URL: https://elitetracker-api-lm85.onrender.com
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
