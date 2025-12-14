@@ -95,8 +95,8 @@ export class AuthController {
       // Redirecionar para o frontend com os dados do usuário
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
       const userData = encodeURIComponent(JSON.stringify({ nodeId, avatarUrl, name, token }));
-      
-      return res.redirect(`${frontendUrl}/authentication?data=${userData}`);
+
+      return res.redirect(`${frontendUrl}/#/authentication?data=${userData}`);
     } catch (error) {
       console.log('OAuth callback error:', error);
 
